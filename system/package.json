@@ -1,0 +1,23 @@
+{
+  "name": "skillmas-core",
+  "version": "0.1.0",
+  "description": "Core algorithm modules for SkillMAS utility learning and skill evolution",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "gray-matter": "^4.0.3",
+    "mem0ai": "^2.2.4",
+    "undici": "^7.22.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
