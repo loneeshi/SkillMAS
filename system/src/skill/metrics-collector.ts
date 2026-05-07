@@ -1,6 +1,5 @@
 /**
- * MetricsCollector — captures and aggregates experiment metrics for the
- * ALFWorld ARISE Method alignment experiment matrix (per Essay §Experiments).
+ * MetricsCollector — captures and aggregates SkillMAS experiment metrics.
  *
  * Tracks per-episode and per-round data:
  *   - Success rate by task family
@@ -64,7 +63,7 @@ export interface ExperimentMetrics {
 }
 
 export type ExperimentMode =
-  | "FULL_ARISE"
+  | "FULL_SKILLMAS"
   | "NO_SKILL_EVOLUTION"
   | "NO_ORGANIZATION"
   | "RETRIEVAL_ONLY"

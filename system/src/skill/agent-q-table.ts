@@ -62,8 +62,8 @@ export class AgentQTable {
   private totalSelections: number = 0
 
   constructor(options?: AgentQTableOptions) {
-    this.alpha = options?.alpha ?? 0.1
-    this.alphaDecay = options?.alphaDecay ?? 0.005
+    this.alpha = options?.alpha ?? 1
+    this.alphaDecay = options?.alphaDecay ?? 1
     this.explorationBonus = options?.explorationBonus ?? DEFAULT_EXPLORATION_BONUS
   }
 
@@ -123,7 +123,7 @@ export class AgentQTable {
   /**
    * Update Q-values after an episode.
    *
-   * Uses Monte Carlo-style update:
+   * Uses Monte Carlo-style update with default α_eff = 1 / (1 + n):
    *   Q(agent, taskType) ← Q + α_eff * (R - Q)
    */
   update(agentId: string, taskType: string, reward: number): void {

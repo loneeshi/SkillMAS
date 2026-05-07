@@ -13,11 +13,15 @@ This repository contains the core non-parametric SkillMAS algorithm components:
 - task-conditioned skill utility estimation
 - task-conditioned agent utility estimation
 - similarity-plus-utility skill selection
+- retained-evidence construction
 - trajectory-driven skill design
 - post-hoc skill refinement and pruning
+- validation-pool promotion for shadow skills
+- evidence-gated MAS restructuring
+- round-level orchestration for the SkillMAS adaptation loop
 - markdown-based agent and skill specifications
 
-This release intentionally excludes evaluation-specific integrations, prompt trees, and environment wrappers. It is organized as an algorithm artifact rather than a full end-to-end reproduction stack.
+This release intentionally excludes evaluation-specific integrations, prompt trees, and environment wrappers. It is organized as an algorithm artifact: users provide an `executeBatch` runtime that returns verified traces, and the core controller applies Utility Learning, retained-evidence construction, bounded skill evolution, validation-pool promotion, and evidence-gated MAS restructuring.
 
 ## Repository Scope
 
@@ -26,9 +30,20 @@ The `system/` directory contains the core TypeScript source modules:
 - `src/spec/`: schemas for agent and skill specs
 - `src/parser/`: markdown frontmatter parsing for agent cards
 - `src/skill/`: utility learning, selection, skill design, and skill maintenance
+- `src/round/`: Algorithm 1 core loop, retained evidence, policy index, validation pool, and MAS restructuring
 - `src/tool/`: tool registry and execution interfaces
 - `src/llm/`: chat and embedding client abstractions
 - `src/messaging/`: in-process message bus and lightweight delegation primitive
+
+## Algorithm Coverage
+
+The `src/round/` modules correspond to the paper's round-level contract:
+
+- `retention.ts`: constructs the retained evidence set from repeated failures, near misses, reusable successes, and retrieval/execution mismatches.
+- `policy-index.ts`: builds the policy-card index from seed skills, validated skills, and optional expert cards.
+- `validation-pool.ts`: keeps newly created or heavily revised skills in shadow status until verified use supports promotion.
+- `restructuring.ts`: builds structural artifacts and applies one bounded executor edit: keep, add, merge/remove, or modify.
+- `round-controller.ts`: runs the Algorithm 1 loop around an externally supplied batch executor.
 
 ## Explicit Omissions
 

@@ -1,7 +1,7 @@
 /**
  * SkillDesigner — creates NEW skills via contrastive trajectory analysis.
  *
- * Part of the ARISE four-module architecture:
+ * Part of the SkillMAS skill-evolution stack:
  *   - SkillDesign (this file): creates new skills from trajectory data
  *   - SkillForge  (skill-forge.ts): refines, prunes, and penalizes existing skills
  *
@@ -12,7 +12,7 @@
  * LEARN is inspired by MemSkill's trajectory-based skill extraction but uses
  * contrastive LLM analysis (success vs failure) rather than a parametric controller.
  *
- * The design pipeline (per essay specification):
+ * The design pipeline:
  *   Step 1: Partition trajectories into success/failure groups per task type
  *   Step 2: Action pattern abstraction — extract tool-call sequences and compute
  *           success-only vs failure-only patterns (set difference)
@@ -510,6 +510,8 @@ export class SkillDesigner {
           steps: [],
           tags: [taskType, "trajectory-learned", `round-${stats.roundNum}`],
           generatedBy: "trajectory-learning",
+          origin: "trajectory-learning",
+          status: "shadow",
         }
 
         // Step 4: Dedup — check against existing library
@@ -943,6 +945,8 @@ Output ONLY the markdown content, no frontmatter.`
           steps: [],
           tags: [taskType, "rl-generated", `round-${stats.roundNum}`],
           generatedBy: "evolution",
+          origin: "failure-pattern",
+          status: "shadow",
         }
 
         // Step 4: Dedup — check against existing library

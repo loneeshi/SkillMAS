@@ -1,8 +1,8 @@
 /**
  * SkillForge — manages the quality of existing skills via Refine and Prune.
  *
- * Separated from SkillDesigner (which creates NEW skills) to match the four-module
- * ARISE architecture:
+ * Separated from SkillDesigner (which creates NEW skills) to match the
+ * SkillMAS skill-evolution stack:
  *   - SkillDesign (designer.ts):  creates new skills from contrastive trajectory analysis
  *   - SkillForge  (skill-forge.ts): refines, prunes, and penalizes existing skills
  *

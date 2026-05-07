@@ -1,7 +1,7 @@
 {
   "name": "skillmas-core",
   "version": "0.1.0",
-  "description": "Core algorithm modules for SkillMAS utility learning and skill evolution",
+  "description": "Core algorithm modules for SkillMAS utility learning, skill evolution, and MAS restructuring",
   "type": "module",
   "private": true,
   "scripts": {

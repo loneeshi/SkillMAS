@@ -80,7 +80,6 @@ export async function promoteShadowSkillIfSafe(
   if (isSeedSkill(skill.spec)) return { ...decision, promoted: false, reason: "seed skills are never promoted by probation" }
   if (!isAutoSkill(skill.spec)) return { ...decision, promoted: false, reason: "only auto skills can be promoted by probation" }
   if (skill.spec.status !== "shadow") return { ...decision, promoted: false, reason: "only shadow skills can enter probation promotion" }
-  if (skill.spec.origin !== "failure-pattern") return { ...decision, promoted: false, reason: "only failure-pattern patch skills can be promoted" }
   if (!decision.promoted) return decision
 
   await skillManager.update(input.skillId, { status: "active" })

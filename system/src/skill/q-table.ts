@@ -73,8 +73,8 @@ export class SkillQTable {
   private autosaveTimer: ReturnType<typeof setTimeout> | undefined
 
   constructor(options?: QTableOptions) {
-    this.alpha = options?.alpha ?? 0.1
-    this.alphaDecay = options?.alphaDecay ?? 0.005
+    this.alpha = options?.alpha ?? 1
+    this.alphaDecay = options?.alphaDecay ?? 1
     this.explorationCoeff = options?.explorationCoeff ?? 1.0
     this.autosavePath = options?.autosavePath
     this.autosaveDebounceMs = options?.autosaveDebounceMs ?? 5000
@@ -121,7 +121,8 @@ export class SkillQTable {
    * Uses Monte Carlo-style update (MemRL):
    *   Q(s) ← Q(s) + α_eff * (R - Q(s))
    *
-   * where α_eff = α / (1 + n * alphaDecay) for adaptive learning rate.
+   * where the default α_eff = 1 / (1 + n), matching count-based
+   * empirical success-probability estimation.
    */
   update(skillId: string, context: { taskType: string; agentId: string; reward: number }): void {
     const normalizedId = normalizeSkillId(skillId)
