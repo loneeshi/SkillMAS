@@ -1,7 +1,7 @@
 /**
  * WorkspaceMerger — merges isolated worker baseDirs back into the main workspace.
  *
- * After parallel benchmark runs, each worker has its own:
+ * After parallel training runs, each worker has its own:
  *   - memory/*.md      (agent memories; legacy .jsonl can still appear)
  *   - agents/*.md      (potentially new agents from extension)
  *   - skills/**\/*.md   (potentially new skills from evolution)
@@ -24,11 +24,14 @@ import {
 } from "node:fs/promises"
 import { join } from "node:path"
 import { createHash } from "node:crypto"
-import {
-  countMarkdownEpisodicEntries,
-  formatMarkdownMemoryDocument,
-  parseMarkdownMemoryDocument,
-} from "../memory/markdown-store"
+interface MarkdownMemoryDocument {
+  structural: string
+  episodic: {
+    lessons: string[]
+    errors: string[]
+    actions: string[]
+  }
+}
 
 export interface MergeResult {
   memoryFiles: number
@@ -305,4 +308,45 @@ export class WorkspaceMerger {
   private hash(content: string): string {
     return createHash("md5").update(content).digest("hex")
   }
+}
+
+function parseMarkdownMemoryDocument(raw: string): MarkdownMemoryDocument {
+  const section = (heading: string): string[] => {
+    const match = raw.match(new RegExp(`^## ${heading}\\n([\\s\\S]*?)(?=^## |\\s*$)`, "m"))
+    if (!match) return []
+    return match[1]
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("- "))
+      .map((line) => line.slice(2).trim())
+      .filter(Boolean)
+  }
+
+  return {
+    structural: raw.split(/^## /m)[0].trim(),
+    episodic: {
+      lessons: section("Lessons"),
+      errors: section("Errors"),
+      actions: section("Actions"),
+    },
+  }
+}
+
+function formatMarkdownMemoryDocument(doc: MarkdownMemoryDocument): string {
+  const list = (items: string[]): string => items.map((item) => `- ${item}`).join("\n")
+  return [
+    doc.structural,
+    "## Lessons",
+    list(doc.episodic.lessons),
+    "## Errors",
+    list(doc.episodic.errors),
+    "## Actions",
+    list(doc.episodic.actions),
+    "",
+  ].filter((part, index) => index === 0 || part.length > 0).join("\n\n")
+}
+
+function countMarkdownEpisodicEntries(raw: string): number {
+  const doc = parseMarkdownMemoryDocument(raw)
+  return doc.episodic.lessons.length + doc.episodic.errors.length + doc.episodic.actions.length
 }

@@ -436,7 +436,7 @@ export class SkillDesigner {
    * This is the key insight from MemRL/MemSkill: learn from episodic memory
    * of successful executions, not just from failure patterns.
    *
-   * Learning conditions (percentage-based for cross-benchmark compatibility):
+   * Learning conditions (percentage-based for cross-domain compatibility):
    *   - TaskType sample ratio >= minSampleRatioToLearn (has enough data)
    *   - Has both successes and failures (contrast available)
    *   - Either:
@@ -539,7 +539,7 @@ export class SkillDesigner {
 
   /**
    * Compute whether to learn a new skill from success trajectories.
-   * Uses percentage-based thresholds for cross-benchmark compatibility.
+   * Uses percentage-based thresholds for cross-domain compatibility.
    */
   private computeLearnPriority(
     taskType: string,
@@ -607,7 +607,6 @@ export class SkillDesigner {
           let score = 0
           if (tags.has(normalizedTaskType)) score += 4
           if (searchable.includes(normalizedTaskType)) score += 3
-          if (tags.has("alfworld")) score += 2
           if (tags.has("manager") && normalizedTaskType.includes("examine")) score += 1
           return { spec, score }
         })
@@ -975,7 +974,7 @@ Output ONLY the markdown content, no frontmatter.`
 
   /**
    * Compute whether to create a new skill for a taskType and with what priority.
-   * Uses percentage-based thresholds for cross-benchmark compatibility.
+   * Uses percentage-based thresholds for cross-domain compatibility.
    */
   private computeCreationPriority(
     taskType: string,
@@ -1331,7 +1330,7 @@ Output ONLY the markdown content, no frontmatter.`
           `Assigned agent: ${context.cluster.assignedAgent ?? "unknown"}`,
           `Implicated agents: ${context.cluster.implicatedAgents.join(", ") || "(none)"}`,
           `Implicated skills: ${context.cluster.implicatedSkills.join(", ") || "(none)"}`,
-          "Use the tools to inspect full traces, IO artifacts, benchmark outcome comparison, and skill/agent boundaries.",
+          "Use the tools to inspect full traces, IO artifacts, evaluator feedback, and skill/agent boundaries.",
           "If the evidence never supports a fixable causal explanation, let the budget expire and the cluster will be excluded from the patch pool.",
         ].filter(Boolean).join("\n"),
       },
@@ -1430,7 +1429,7 @@ Output ONLY the markdown content, no frontmatter.`
         type: "function",
         function: {
           name: "compare_answer_to_ground_truth",
-          description: "Compare the exemplar's answer/output against benchmark ground truth or benchmark scoring feedback when exact ground truth text is unavailable.",
+          description: "Compare the exemplar's answer/output against reference output or evaluator feedback when exact ground truth text is unavailable.",
           parameters: {
             type: "object",
             properties: {
@@ -1649,7 +1648,7 @@ Output ONLY the markdown content, no frontmatter.`
     return {
       kind,
       exactGroundTruthAvailable: false,
-      benchmarkOutcome: {
+      evaluatorOutcome: {
         success: "success" in trajectory ? trajectory.success : false,
         score: trajectory.score ?? null,
         error: getTrajectoryError(trajectory),
@@ -1658,7 +1657,7 @@ Output ONLY the markdown content, no frontmatter.`
         finalAssistantMessage,
         userReplyOutputs: userReplies,
       },
-      comparisonGuidance: "Use benchmark success/score as the ground-truth proxy when exact reference answers are unavailable.",
+      comparisonGuidance: "Use success/score fields as evaluator proxies when exact reference answers are unavailable.",
     }
   }
 

@@ -1,4 +1,3 @@
-import type { DomainConfig } from "../extension/domain-config"
 import type { ToolCallRecord } from "../runtime/types"
 
 export interface SkillCatalogEntry {
@@ -14,6 +13,10 @@ export interface SkillCatalogEntry {
 export interface SkillUsageResult {
   usedSkills: Record<string, string[]>
   candidateOnly: string[]
+}
+
+export interface SkillToolMappingConfig {
+  skillToolMapping?: Record<string, string[]>
 }
 
 /**
@@ -55,13 +58,13 @@ export function buildAgentToolUsageIndex(
  */
 export function inferSkillToolHints(
   skillId: string,
-  domain: DomainConfig,
+  config: SkillToolMappingConfig,
   catalogEntry?: SkillCatalogEntry,
 ): Set<string> {
   const normalizedId = normalizeSkillId(skillId)
   const hints = new Set<string>()
 
-  const mappedTools = domain.skillToolMapping?.[normalizedId]
+  const mappedTools = config.skillToolMapping?.[normalizedId]
   if (mappedTools) {
     for (const toolName of mappedTools) hints.add(toolName)
     return hints
@@ -95,7 +98,7 @@ export function computeActualSkillsUsed(
   rootAgentId: string,
   injectedSkills: Record<string, string[]>,
   toolCalls: ToolCallRecord[],
-  domain: DomainConfig,
+  config: SkillToolMappingConfig,
   catalog: Map<string, SkillCatalogEntry>,
 ): SkillUsageResult {
   const toolsByAgent = buildAgentToolUsageIndex(rootAgentId, toolCalls)
@@ -108,7 +111,7 @@ export function computeActualSkillsUsed(
 
     for (const skillId of skillIds) {
       const normalizedId = normalizeSkillId(skillId)
-      const hints = inferSkillToolHints(normalizedId, domain, catalog.get(normalizedId) ?? catalog.get(skillId))
+      const hints = inferSkillToolHints(normalizedId, config, catalog.get(normalizedId) ?? catalog.get(skillId))
       const wasUsed = hints.size > 0 && [...hints].some((toolName) => agentTools.has(toolName))
       if (wasUsed) {
         used.push(skillId)

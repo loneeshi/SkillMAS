@@ -8,12 +8,46 @@
 import type { LLMClient } from "../llm/client"
 import type { ToolExecutor } from "../tool/executor"
 import type { ToolRegistry } from "../tool/registry"
-import type { MemoryManager } from "../memory/manager"
 import type { SkillManager } from "../skill/manager"
 import type { RuntimeSkillContract, RuntimeSkillPatch } from "../spec/skill"
-import type { AgentSkillPool } from "../skill/pool"
 import type { ToolMode } from "../llm/types"
-import type { ContextBudget, CheckpointingOptions, SessionMode, SessionRunResult } from "../session/types"
+
+export type SessionMode = "single" | "episodic" | "batch"
+
+export interface ContextBudget {
+  maxChars?: number
+  maxMessages?: number
+  reserveChars?: number
+}
+
+export interface CheckpointingOptions {
+  enabled?: boolean
+  intervalSteps?: number
+  outputDir?: string
+}
+
+export interface SessionRunResult {
+  runId?: string
+  response: string
+  success?: boolean
+  metadata?: Record<string, unknown>
+}
+
+export interface MemoryManagerPort {
+  search?(query: string, limit?: number): Promise<string[]>
+  append?(entry: string, metadata?: Record<string, unknown>): Promise<void>
+}
+
+export interface AgentSkillPoolPort {
+  resolve?(agentId: string, taskType?: string): Promise<RuntimeSkillTuple[]>
+}
+
+export type FailureClass =
+  | "tool_error"
+  | "delegation_error"
+  | "policy_error"
+  | "task_failure"
+  | "unknown"
 
 export interface ContextFragment {
   id: string
@@ -159,10 +193,10 @@ export interface AgentDeps {
   llm: LLMClient
   toolExecutor: ToolExecutor
   toolRegistry: ToolRegistry
-  memoryManager: MemoryManager
+  memoryManager?: MemoryManagerPort
   skillManager: SkillManager
   /** Isolated skill pool for this specific agent */
-  skillPool?: AgentSkillPool
+  skillPool?: AgentSkillPoolPort
   /** For orchestrators: returns current worker descriptions to inject into prompt */
   getWorkerDescriptions?: () => string | null
   /** Global policy rules (from policy.md) injected into every agent's system prompt */
@@ -227,7 +261,7 @@ export interface ToolCallRecord {
     failureReason?: string
     subtaskId?: string
     planNodeId?: string
-    failureClass?: import("../session/types").FailureClass
+    failureClass?: FailureClass
     checkpointId?: string
   }
   stepOutcome?: "success" | "failure"
@@ -268,5 +302,3 @@ export interface RunResult {
   /** Number of conversation messages trimmed by the sliding window. */
   trimmedMessages?: number
 }
-
-export type { SessionRunResult }

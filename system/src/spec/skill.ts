@@ -1,21 +1,8 @@
 /**
- * SkillSpec v2 — aligned with Claude Code's skill framework + A2S research extensions.
+ * SkillSpec schemas for the core SkillMAS artifact.
  *
- * Claude Code concepts mapped:
- *   name → id (path-based: "alfworld/task_decomposition")
- *   description → description
- *   disable-model-invocation + user-invocable → invocation
- *   allowed-tools → allowedTools
- *   context → context (inline | fork)
- *   agent → agent
- *   model → model
- *   hooks → hooks
- *
- * A2S-specific extensions:
- *   whenToUse, steps, tags — original fields
- *   type — content classification (reference | task | workflow)
- *   arguments — structured argument schema
- *   generatedBy — auto-generation tracking
+ * The schema keeps the algorithm-facing fields used by utility learning,
+ * selection, and skill evolution while avoiding evaluation-specific contracts.
  */
 
 import { z } from "zod"
@@ -68,12 +55,12 @@ export const SkillDifficultySchema = z.object({
 export type SkillDifficulty = z.infer<typeof SkillDifficultySchema>
 
 export const RuntimeSkillPatchSchema = z.object({
-  type: z.enum(["taubench_action_repair"]),
+  type: z.enum(["tool_call_repair"]),
   taskType: z.string().optional(),
   tool: z.string().min(1),
   match: z.record(z.string(), z.unknown()).default({}),
   repair: z.record(z.string(), z.unknown()).default({}),
-  source: z.enum(["action_mismatch"]).optional(),
+  source: z.string().optional(),
   evidence: z.string().optional(),
 })
 
@@ -81,61 +68,26 @@ export type RuntimeSkillPatch = z.infer<typeof RuntimeSkillPatchSchema>
 
 export const RuntimeSkillContractSchema = z.discriminatedUnion("type", [
   z.object({
-    type: z.literal("taubench_action_contract"),
+    type: z.literal("tool_contract"),
     taskType: z.string().optional(),
     tool: z.string().min(1),
     requiredArgs: z.record(z.string(), z.unknown()).default({}),
-    source: z.enum(["action_mismatch"]).optional(),
+    source: z.string().optional(),
     evidence: z.string().optional(),
   }),
   z.object({
-    type: z.literal("taubench_communication_contract"),
+    type: z.literal("communication_contract"),
     taskType: z.string().optional(),
     requiredInfo: z.array(z.string().min(1)).default([]),
-    source: z.enum(["communicate_check"]).optional(),
+    source: z.string().optional(),
     evidence: z.string().optional(),
   }),
   z.object({
-    type: z.literal("taubench_payment_delta_communication_contract"),
-    taskType: z.string().optional(),
-    requiredInfo: z.array(z.string().min(1)).default([]),
-    requireOrderIds: z.boolean().default(true),
-    source: z.enum(["communicate_check", "payment_delta_failure"]).optional(),
-    evidence: z.string().optional(),
-  }),
-  z.object({
-    type: z.literal("taubench_item_order_provenance_contract"),
+    type: z.literal("provenance_contract"),
     taskType: z.string().optional(),
     tools: z.array(z.string().min(1)).default([]),
-    required: z.array(z.enum([
-      "candidate_orders_inspected",
-      "current_item_in_order",
-      "replacement_item_from_catalog",
-      "payment_method_grounded",
-    ])).default(["candidate_orders_inspected", "current_item_in_order", "replacement_item_from_catalog", "payment_method_grounded"]),
-    source: z.enum(["provenance_failure"]).optional(),
-    evidence: z.string().optional(),
-  }),
-  z.object({
-    type: z.literal("taubench_partial_cancel_contract"),
-    taskType: z.string().optional(),
-    source: z.enum(["partial_cancel_failure"]).optional(),
-    evidence: z.string().optional(),
-  }),
-  z.object({
-    type: z.literal("taubench_multi_order_subgoal_contract"),
-    taskType: z.string().optional(),
-    minSuccessfulWrites: z.number().int().positive().default(2),
-    source: z.enum(["subgoal_failure"]).optional(),
-    evidence: z.string().optional(),
-  }),
-  z.object({
-    type: z.literal("taubench_multi_order_binding_contract"),
-    taskType: z.string().optional(),
-    tools: z.array(z.string().min(1)).default([]),
-    minDistinctOrders: z.number().int().positive().default(2),
-    requireOrderIdsInClosure: z.boolean().default(true),
-    source: z.enum(["multi_order_binding_failure"]).optional(),
+    required: z.array(z.string().min(1)).default([]),
+    source: z.string().optional(),
     evidence: z.string().optional(),
   }),
 ])
