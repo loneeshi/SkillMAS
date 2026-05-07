@@ -11,12 +11,12 @@
  * Selection is deterministic (greedy top-K by composite score).
  */
 
-import type { SkillQTable } from "./q-table"
+import type { SkillQTable } from "./q-table.js"
 import {
   buildSkillSemanticText,
   getDefaultSimilarityScorer,
   type TextSimilarityScorer,
-} from "../llm/embedding"
+} from "../llm/embedding.js"
 
 /** Input context for skill selection. */
 export interface SelectionContext {

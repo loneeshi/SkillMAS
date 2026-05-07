@@ -3,9 +3,9 @@ export {
   ToolDefinitionSchema,
   ToolRegistry,
   getDefaultRegistry,
-} from "./registry"
+} from "./registry.js"
 
-export type { ToolParam, ToolDefinition } from "./registry"
+export type { ToolParam, ToolDefinition } from "./registry.js"
 
-export { ToolExecutor } from "./executor"
-export type { ToolResult, ToolHandler } from "./executor"
+export { ToolExecutor } from "./executor.js"
+export type { ToolResult, ToolHandler } from "./executor.js"

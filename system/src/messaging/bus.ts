@@ -5,7 +5,7 @@
  * Messages are delivered asynchronously; the bus is purely in-process.
  */
 
-import type { AgentMessage, MessageHandler, MessageType } from "./types"
+import type { AgentMessage, MessageHandler, MessageType } from "./types.js"
 
 let _nextId = 0
 function nextMessageId(): string {

@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { readdir, readFile, writeFile, unlink } from "node:fs/promises"
 import { join } from "node:path"
-import type { ToolPolicy } from "../spec/agent"
+import type { ToolPolicy } from "../spec/agent.js"
 
 export const ToolParamSchema = z.object({
   type: z.string().min(1),

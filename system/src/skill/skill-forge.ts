@@ -16,11 +16,11 @@
  * signal; Forge should only polish or prune skills based on observed patterns.
  */
 
-import type { LLMClient } from "../llm/client"
-import type { SkillManager } from "./manager"
-import type { SkillQTable } from "./q-table"
-import type { RoundStats } from "./designer"
-import type { SkillSpec } from "../spec/skill"
+import type { LLMClient } from "../llm/client.js"
+import type { SkillManager } from "./manager.js"
+import type { SkillQTable } from "./q-table.js"
+import type { RoundStats } from "./designer.js"
+import type { SkillSpec } from "../spec/skill.js"
 import { isSeedSkill } from "./seed-skill.js"
 
 /** Actions taken by SkillForge in a single round. */

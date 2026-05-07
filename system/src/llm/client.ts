@@ -15,7 +15,7 @@
  *   - Client errors (4xx except 429), parse errors: NOT retried.
  */
 
-import type { ChatMessage, ChatResponse, ChatOptions } from "./types"
+import type { ChatMessage, ChatResponse, ChatOptions } from "./types.js"
 
 export interface LLMClientOptions {
   apiKey: string

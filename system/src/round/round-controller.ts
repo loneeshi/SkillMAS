@@ -118,9 +118,14 @@ export class SkillMASRoundController {
       : undefined
     const validationDecisions = await this.validationPool.evaluate(normalizedTraces)
 
+    const validatedSkillIds = validationDecisions
+      .filter((decision) => decision.action === "promote")
+      .map((decision) => decision.skillId)
+    const pendingSkillIds = unique([...newlyCreated, ...validatedSkillIds])
+
     let restructuring: RestructuringResult | undefined
     if (this.restructurer) {
-      const artifacts = await this.restructurer.buildArtifacts(retainedEvidence, newlyCreated)
+      const artifacts = await this.restructurer.buildArtifacts(retainedEvidence, pendingSkillIds)
       const decision = await this.restructurer.decide(artifacts)
       restructuring = await this.restructurer.apply(decision)
     }
@@ -233,4 +238,8 @@ function toEpisodeTrajectory(trace: VerifiedTrace): EpisodeTrajectory {
     })),
     toolCalls: trace.toolCalls,
   }
+}
+
+function unique<T>(values: T[]): T[] {
+  return [...new Set(values)]
 }

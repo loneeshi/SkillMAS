@@ -1,5 +1,5 @@
-export { LLMClient } from "./client"
-export type { LLMClientOptions } from "./client"
+export { LLMClient } from "./client.js"
+export type { LLMClientOptions } from "./client.js"
 export {
   EmbeddingClient,
   EmbeddingSimilarityScorer,
@@ -7,12 +7,12 @@ export {
   getDefaultSimilarityScorer,
   resolveProviderEnv,
   buildSkillSemanticText,
-} from "./embedding"
+} from "./embedding.js"
 export type {
   EmbeddingClientOptions,
   TextSimilarityScorer,
   ProviderEnvConfig,
-} from "./embedding"
+} from "./embedding.js"
 export type {
   ChatMessage,
   ChatResponse,
@@ -21,4 +21,4 @@ export type {
   ToolSchema,
   ToolMode,
   ToolChoice,
-} from "./types"
+} from "./types.js"

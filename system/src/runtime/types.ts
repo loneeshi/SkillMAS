@@ -5,12 +5,12 @@
  * circular dependencies between runtime modules.
  */
 
-import type { LLMClient } from "../llm/client"
-import type { ToolExecutor } from "../tool/executor"
-import type { ToolRegistry } from "../tool/registry"
-import type { SkillManager } from "../skill/manager"
-import type { RuntimeSkillContract, RuntimeSkillPatch } from "../spec/skill"
-import type { ToolMode } from "../llm/types"
+import type { LLMClient } from "../llm/client.js"
+import type { ToolExecutor } from "../tool/executor.js"
+import type { ToolRegistry } from "../tool/registry.js"
+import type { SkillManager } from "../skill/manager.js"
+import type { RuntimeSkillContract, RuntimeSkillPatch } from "../spec/skill.js"
+import type { ToolMode } from "../llm/types.js"
 
 export type SessionMode = "single" | "episodic" | "batch"
 
@@ -232,7 +232,7 @@ export interface RunOptions {
   /** Absolute path to the code that generated instanceAdvice, when known. */
   instanceAdvicePath?: string
   /** Optional shared conversation transcript injected before the current input. */
-  sharedMessages?: import("../llm/types").ChatMessage[]
+  sharedMessages?: import("../llm/types.js").ChatMessage[]
   /** Optional shared canonical case state injected into the prompt/runtime. */
   sharedState?: CaseState
   /** Agentic process observation context: o_t = <K_t, h_t, sigma_t>. */
@@ -283,7 +283,7 @@ export interface ToolCallRecord {
     iterations: number
     usage: { promptTokens: number; completionTokens: number }
     contextTrace?: ContextTrace
-    messages?: import("../llm/types").ChatMessage[]
+    messages?: import("../llm/types.js").ChatMessage[]
   }
 }
 
@@ -296,7 +296,7 @@ export interface RunResult {
     completionTokens: number
   }
   /** Full LLM conversation history (system + user + assistant + tool messages). */
-  messages?: import("../llm/types").ChatMessage[]
+  messages?: import("../llm/types.js").ChatMessage[]
   /** Structured breakdown of prompt/context fragments included in the run. */
   contextTrace?: ContextTrace
   /** Number of conversation messages trimmed by the sliding window. */

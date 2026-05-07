@@ -1,9 +1,9 @@
-export { MessageBus } from "./bus"
-export { Delegator } from "./delegate"
+export { MessageBus } from "./bus.js"
+export { Delegator } from "./delegate.js"
 export type {
   AgentMessage,
   MessageType,
   MessageHandler,
   DelegateRequest,
   DelegateResult,
-} from "./types"
+} from "./types.js"

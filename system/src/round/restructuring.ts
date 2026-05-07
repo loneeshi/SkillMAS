@@ -136,6 +136,8 @@ export class MASRestructurer {
 
     if (lowUtilityExecutors.length > 0 && artifact.pendingSkillIds.length > 0) {
       const agentId = lowUtilityExecutors[0]
+      const existingSkills = (await this.agentStore.get(agentId))?.spec.skills ?? []
+      const nextSkills = unique([...existingSkills, ...artifact.pendingSkillIds])
       return {
         action: "modify",
         artifact,
@@ -143,7 +145,8 @@ export class MASRestructurer {
         modify: [{
           agentId,
           specUpdates: {
-            skills: unique([...(await this.agentStore.get(agentId))?.spec.skills ?? [], ...artifact.pendingSkillIds]),
+            skills: nextSkills,
+            skill_pool: nextSkills,
           },
           promptAppendix: boundaryAppendix(artifact),
         }],
@@ -217,8 +220,14 @@ export class MASRestructurer {
       if (!target || !removed) {
         return { decision, changed: false, patchedAgentIds: [], createdAgentIds: [], removedAgentIds: [] }
       }
+      const nextSkills = unique([
+        ...target.spec.skills,
+        ...removed.spec.skills,
+        ...(decision.artifact?.pendingSkillIds ?? []),
+      ])
       await this.agentStore.update(target.spec.id, {
-        skills: unique([...target.spec.skills, ...removed.spec.skills]),
+        skills: nextSkills,
+        skill_pool: nextSkills,
       }, `${target.prompt}\n\n${boundaryAppendix(decision.artifact)}`)
       await this.agentStore.remove(removed.spec.id)
       return {

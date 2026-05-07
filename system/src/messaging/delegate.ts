@@ -5,9 +5,9 @@
  * journals or environment-specific routing without changing the core contract.
  */
 
-import type { RunOptions, SubagentCall, WorkerResult, RunResult } from "../runtime/types"
-import type { DelegateResult } from "./types"
-import type { MessageBus } from "./bus"
+import type { RunOptions, SubagentCall, WorkerResult, RunResult } from "../runtime/types.js"
+import type { DelegateResult } from "./types.js"
+import type { MessageBus } from "./bus.js"
 
 export interface AgentRuntimePort {
   run(input: string, options?: RunOptions): Promise<RunResult>

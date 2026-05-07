@@ -1,2 +1,2 @@
-export { WorkspaceMerger } from "./merge"
-export type { MergeResult } from "./merge"
+export { WorkspaceMerger } from "./merge.js"
+export type { MergeResult } from "./merge.js"

@@ -1,4 +1,4 @@
-import type { SkillCatalogEntry } from "../skill/utilization"
+import type { SkillCatalogEntry } from "../skill/utilization.js"
 
 let _dispatcher: unknown | undefined
 

@@ -1,4 +1,4 @@
-import type { ToolCallRecord } from "../runtime/types"
+import type { ToolCallRecord } from "../runtime/types.js"
 
 export interface SkillCatalogEntry {
   description: string

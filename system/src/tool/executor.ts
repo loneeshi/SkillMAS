@@ -6,9 +6,9 @@
  * Together they give an agent both the schema (for LLM) and the logic (for execution).
  */
 
-import type { ToolDefinition } from "./registry"
-import type { ChatMessage, ToolSchema } from "../llm/types"
-import type { CaseState, RuntimeSkillTuple } from "../runtime/types"
+import type { ToolDefinition } from "./registry.js"
+import type { ChatMessage, ToolSchema } from "../llm/types.js"
+import type { CaseState, RuntimeSkillTuple } from "../runtime/types.js"
 
 export interface ToolResult {
   ok: boolean
