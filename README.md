@@ -45,6 +45,17 @@ The `src/round/` modules correspond to the paper's round-level contract:
 - `restructuring.ts`: builds structural artifacts and applies one bounded executor edit: keep, add, merge/remove, or modify.
 - `round-controller.ts`: runs the Algorithm 1 loop around an externally supplied batch executor.
 
+## Method Smoke Test
+
+The repository includes a benchmark-free smoke test that exercises the core Method flow with synthetic verified traces:
+
+```bash
+cd system
+npm run smoke:method
+```
+
+The smoke test does not use ALFWorld, WebShop, TauBench, or any environment adapter. It creates temporary agent and skill specs, runs `SkillMASRoundController`, and prints the retained evidence, validation-pool decisions, and MAS restructuring result. This verifies that the Method-level artifact can execute without benchmark-specific rules.
+
 ## Explicit Omissions
 
 This repository does **not** include:

@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "smoke:method": "npm run build && node ../examples/method-smoke.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "dev": "tsc --watch"
   },
